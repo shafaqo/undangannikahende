@@ -50,14 +50,14 @@
             font-family: 'Playfair Display', serif;
         }
 
-        /* Efek Text Gold Mewah */
+        /* === UPGRADED: Efek Text Gold Super Mewah === */
         .text-gold {
             background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-size: 200% auto;
             animation: shine 4s linear infinite;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            filter: drop-shadow(0 0 2px rgba(197, 160, 89, 0.3));
         }
 
         /* Ornamen Divider Batik Style (CSS) */
@@ -66,24 +66,31 @@
             align-items: center;
             justify-content: center;
             margin: 2rem 0;
-            opacity: 0.7;
+            opacity: 0.8;
         }
         .divider-ornament::before, .divider-ornament::after {
             content: "";
             height: 1px;
-            background: var(--primary-gold);
+            background: linear-gradient(90deg, transparent, var(--primary-gold), transparent);
             flex: 1;
             margin: 0 15px;
         }
         .divider-icon {
             color: var(--primary-gold);
             font-size: 1.5rem;
+            animation: pulse-gold 2s infinite;
         }
 
         @keyframes shine {
             to {
                 background-position: 200% center;
             }
+        }
+        
+        @keyframes pulse-gold {
+            0% { transform: scale(1); opacity: 0.8; }
+            50% { transform: scale(1.1); opacity: 1; text-shadow: 0 0 10px rgba(197, 160, 89, 0.8); }
+            100% { transform: scale(1); opacity: 0.8; }
         }
 
         /* Floating Leaves Animation Background */
@@ -112,6 +119,40 @@
             100% { opacity: 0; transform: translateY(100vh) rotate(360deg); }
         }
 
+        /* === NEW: Fireflies / Magic Dust Animation === */
+        .firefly-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1; /* Di atas background, di bawah konten */
+            pointer-events: none;
+        }
+        
+        .firefly {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: #C5A059;
+            border-radius: 50%;
+            box-shadow: 0 0 10px 2px rgba(197, 160, 89, 0.4);
+            animation: fly 15s infinite alternate ease-in-out;
+            opacity: 0;
+        }
+        
+        .firefly:nth-child(1) { top: 10%; left: 10%; animation-delay: 0s; transform: scale(0.6); }
+        .firefly:nth-child(2) { top: 30%; left: 80%; animation-delay: 2s; transform: scale(1); }
+        .firefly:nth-child(3) { top: 70%; left: 20%; animation-delay: 4s; transform: scale(0.8); }
+        .firefly:nth-child(4) { top: 50%; left: 50%; animation-delay: 6s; transform: scale(1.2); }
+        .firefly:nth-child(5) { top: 90%; left: 90%; animation-delay: 1s; transform: scale(0.7); }
+        .firefly:nth-child(6) { top: 20%; left: 40%; animation-delay: 3s; transform: scale(0.9); }
+        
+        @keyframes fly {
+            0% { opacity: 0; transform: translate(0, 0); }
+            20% { opacity: 0.8; }
+            50% { opacity: 0.4; transform: translate(50px, -50px); }
+            80% { opacity: 0.8; }
+            100% { opacity: 0; transform: translate(-30px, 30px); }
+        }
+
         /* Cover Overlay Style */
         #cover-overlay {
             position: fixed;
@@ -119,7 +160,7 @@
             left: 0;
             width: 100%;
             height: 100vh;
-            background-image: linear-gradient(rgba(47, 82, 51, 0.8), rgba(20, 40, 25, 0.9)), url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop'); 
+            background-image: linear-gradient(rgba(47, 82, 51, 0.85), rgba(20, 40, 25, 0.95)), url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop'); 
             background-size: cover;
             background-position: center;
             z-index: 9999;
@@ -211,7 +252,7 @@
             margin-bottom: 4px;
         }
 
-        /* Custom Frame for Couple */
+        /* === UPGRADED: Photo Frame Glow === */
         .photo-frame {
             border: 4px solid var(--primary-gold);
             padding: 6px;
@@ -219,7 +260,15 @@
             position: relative;
             background: white;
             box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            /* Add subtle glow animation */
+            animation: frame-glow 3s infinite alternate;
         }
+        
+        @keyframes frame-glow {
+            from { box-shadow: 0 0 5px rgba(197, 160, 89, 0.1); border-color: #C5A059; }
+            to { box-shadow: 0 0 20px rgba(197, 160, 89, 0.5); border-color: #e3c47e; }
+        }
+
         .photo-frame img {
             border-radius: 95px 95px 0 0;
             width: 100%;
@@ -227,12 +276,33 @@
             object-fit: cover;
         }
 
-        /* Amplop Animation */
+        /* === UPGRADED: Button Shine Effect === */
         .buka-btn {
             background: linear-gradient(to right, var(--primary-gold), #b38728);
             box-shadow: 0 0 20px rgba(197, 160, 89, 0.5);
             transition: transform 0.2s;
+            position: relative;
+            overflow: hidden;
         }
+        
+        /* Shimmer sweep effect overlay */
+        .buka-btn::after, .shine-effect::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            animation: btn-sweep 3s infinite;
+        }
+        
+        @keyframes btn-sweep {
+            0% { left: -100%; }
+            20% { left: 100%; }
+            100% { left: 100%; }
+        }
+
         .buka-btn:active {
             transform: scale(0.95);
         }
@@ -245,12 +315,71 @@
             box-shadow: 0 10px 30px rgba(47, 82, 51, 0.1);
         }
         
+        /* === ANIMASI KARTU MEWAH (SHIMMER) === */
+        .luxury-card {
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+        
+        .luxury-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -150%;
+            width: 150%;
+            height: 100%;
+            background: linear-gradient(
+                to right, 
+                transparent 0%, 
+                rgba(255, 215, 0, 0.2) 40%, 
+                rgba(255, 255, 255, 0.4) 50%, 
+                rgba(255, 215, 0, 0.2) 60%, 
+                transparent 100%
+            );
+            transform: skewX(-25deg);
+            animation: shimmer 3s infinite;
+            pointer-events: none;
+        }
+
+        .luxury-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(197, 160, 89, 0.2);
+            border-color: var(--primary-gold);
+        }
+
+        @keyframes shimmer {
+            0% { left: -150%; }
+            50% { left: 150%; }
+            100% { left: 150%; }
+        }
+
+        /* Sparkle dots overlay inside cards */
+        .sparkles {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            background-image: 
+                radial-gradient(white 1px, transparent 1px),
+                radial-gradient(rgba(197, 160, 89, 0.8) 2px, transparent 2px);
+            background-size: 50px 50px;
+            background-position: 0 0, 25px 25px;
+            opacity: 0;
+            animation: twinkle 4s infinite alternate;
+        }
+        
+        @keyframes twinkle {
+            0% { opacity: 0; background-position: 0 0, 25px 25px; }
+            100% { opacity: 0.3; background-position: 10px 10px, 35px 35px; }
+        }
+
         /* Map Container */
         .map-container iframe {
             width: 100%;
             height: 300px;
             border-radius: 15px;
             border: 2px solid var(--primary-gold);
+            box-shadow: 0 4px 10px rgba(197, 160, 89, 0.2);
         }
     </style>
 </head>
@@ -262,6 +391,16 @@
         <div><img src="https://img.icons8.com/color/48/null/leaf.png" style="width: 30px; opacity: 0.3;"></div>
         <div><img src="https://img.icons8.com/color/48/null/leaf.png" style="width: 25px; opacity: 0.4;"></div>
         <div><img src="https://img.icons8.com/color/48/null/leaf.png" style="width: 15px; opacity: 0.6;"></div>
+    </div>
+    
+    <!-- === NEW: Firefly / Magic Dust Container === -->
+    <div class="firefly-container">
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
+        <div class="firefly"></div>
     </div>
 
     <!-- Audio Player -->
@@ -296,7 +435,8 @@
             <p class="font-header text-gray-200 mb-2 text-sm">Kepada Yth.</p>
             <p class="font-header text-white font-bold text-xl mb-10 tracking-wide border-b border-yellow-600/50 inline-block pb-2">Bapak/Ibu/Saudara/i</p>
             
-            <button onclick="openInvitation()" class="buka-btn text-white px-8 py-3 rounded-full font-bold flex items-center justify-center gap-3 mx-auto animate-pulse shadow-[0_0_20px_rgba(255,215,0,0.6)]">
+            <!-- Tombol Buka Undangan sekarang memiliki class animate-pulse dihapus diganti efek internal yg lebih smooth -->
+            <button onclick="openInvitation()" class="buka-btn text-white px-8 py-3 rounded-full font-bold flex items-center justify-center gap-3 mx-auto shadow-[0_0_20px_rgba(255,215,0,0.6)]">
                 <i class="fas fa-envelope-open"></i> Buka Undangan
             </button>
         </div>
@@ -364,7 +504,7 @@
                         <!-- Placeholder Image Wanita Muslimah -->
                         <img src="https://img.freepik.com/free-vector/cute-muslim-couple-wedding-illustration_157649-51.jpg" alt="Diana">
                     </div>
-                    <h2 class="font-script text-4xl text-[#2F5233] mb-2 font-bold">Nurdiana R. Hrp, S.Si</h2>
+                    <h2 class="font-script text-4xl text-[#2F5233] mb-2 font-bold text-gold">Nurdiana R. Hrp, S.Si</h2>
                     <p class="text-sm text-gray-600 font-serif">Putri Bpk. Ramadhan Harahap (Alm) <br>& Ibu Sakdiah Nasution</p>
                     <a href="https://instagram.com" class="inline-block mt-3 text-[#2F5233] text-lg"><i class="fab fa-instagram"></i></a>
                 </div>
@@ -377,7 +517,7 @@
                         <!-- Placeholder Image Pria Muslim -->
                         <img src="https://img.freepik.com/free-vector/cute-muslim-couple-wedding-illustration_157649-51.jpg" alt="Ikbal" style="object-position: right;">
                     </div>
-                    <h2 class="font-script text-4xl text-[#2F5233] mb-2 font-bold">M. Ikbal Rambe, S.Tp</h2>
+                    <h2 class="font-script text-4xl text-[#2F5233] mb-2 font-bold text-gold">M. Ikbal Rambe, S.Tp</h2>
                     <p class="text-sm text-gray-600 font-serif">Putra Bpk. Tohiruddin Rambe (Alm) <br>& Ibu Nurlaila Murni Nasution, A.Ma</p>
                     <a href="https://instagram.com" class="inline-block mt-3 text-[#2F5233] text-lg"><i class="fab fa-instagram"></i></a>
                 </div>
@@ -402,7 +542,7 @@
                 
                 <div class="grid md:grid-cols-2 gap-6">
                     <!-- Akad Card (Animasi Flip Left) -->
-                    <div class="glass-card p-8 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition duration-300" data-aos="flip-left" data-aos-duration="1200">
+                    <div class="glass-card p-8 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 luxury-card" data-aos="flip-left" data-aos-duration="1200">
                         <div class="absolute top-0 right-0 bg-[#2F5233] text-white text-xs px-3 py-1 rounded-bl-lg">Sakral</div>
                         <i class="fas fa-file-signature text-4xl text-[#C5A059] mb-4"></i>
                         <h3 class="font-script text-3xl mb-1 text-[#2F5233]">Akad Nikah</h3>
@@ -413,7 +553,7 @@
                     </div>
 
                     <!-- Resepsi Card (Animasi Flip Right) -->
-                    <div class="glass-card p-8 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition duration-300" data-aos="flip-right" data-aos-delay="200" data-aos-duration="1200">
+                    <div class="glass-card p-8 rounded-xl relative overflow-hidden group hover:-translate-y-2 transition duration-300 luxury-card" data-aos="flip-right" data-aos-delay="200" data-aos-duration="1200">
                          <div class="absolute top-0 right-0 bg-[#C5A059] text-white text-xs px-3 py-1 rounded-bl-lg">Pesta</div>
                         <i class="fas fa-glass-cheers text-4xl text-[#C5A059] mb-4"></i>
                         <h3 class="font-script text-3xl mb-1 text-[#2F5233]">Resepsi</h3>
@@ -441,7 +581,7 @@
                         </div>
 
                         <a href="https://goo.gl/maps/PlaceHolderLink" target="_blank" 
-                           class="inline-block bg-[#2F5233] text-white px-8 py-3 rounded-full shadow-lg hover:bg-[#1f3822] transition transform hover:scale-105 ring-2 ring-[#C5A059] ring-offset-2"
+                           class="shine-effect inline-block bg-[#2F5233] text-white px-8 py-3 rounded-full shadow-lg hover:bg-[#1f3822] transition transform hover:scale-105 ring-2 ring-[#C5A059] ring-offset-2 relative overflow-hidden"
                            data-aos="fade-up" data-aos-delay="400">
                             <i class="fas fa-location-arrow mr-2"></i> Buka Google Maps
                         </a>
@@ -458,32 +598,34 @@
                     <p class="text-gray-500 text-sm mb-8">Doa restu Anda merupakan karunia yang sangat berarti bagi kami. Dan jika memberi adalah ungkapan tanda kasih Anda, Anda dapat memberi kado secara cashless.</p>
                 </div>
                 
-                <div class="space-y-4">
-                    <!-- Bank Item 1 (Animasi Slide Kiri) -->
-                    <div class="glass-card p-6 rounded-xl border-l-4 border-[#2F5233] text-left relative" data-aos="fade-left" data-aos-duration="1000">
+                <div class="space-y-6">
+                    <!-- Bank Item 1: MANDIRI (Sparkling Animation) -->
+                    <div class="glass-card luxury-card p-6 rounded-xl border-l-4 border-[#2F5233] text-left relative" data-aos="fade-left" data-aos-duration="1000">
+                        <div class="sparkles"></div> <!-- Sparkle Overlay -->
                         <div class="flex items-center justify-between mb-2">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/5/5c/Bank_BRI_logo_2020.svg" alt="BRI" class="h-8">
-                            <i class="fas fa-credit-card text-gray-300 text-2xl"></i>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/ad/Bank_Mandiri_logo_2016.svg" alt="Mandiri" class="h-8">
+                            <i class="fas fa-credit-card text-yellow-600 text-2xl"></i>
                         </div>
                         <p class="text-xs text-gray-500 uppercase tracking-wide">No. Rekening</p>
-                        <p class="text-xl font-bold text-gray-800 tracking-wider font-mono" id="rek1">1234-5678-9000-000</p>
-                        <p class="text-sm text-gray-600 mb-4">a.n Muhammad Ikbal Rambe</p>
-                        <button onclick="copyToClipboard('123456789000000')" class="bg-[#F0F4F1] text-[#2F5233] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2F5233] hover:text-white transition flex items-center gap-2">
+                        <p class="text-xl font-bold text-gray-800 tracking-wider font-mono" id="rek1">1330-0127-1036-4</p>
+                        <p class="text-sm text-gray-600 mb-4 font-semibold">a.n Muhammad Ikbal Rambe</p>
+                        <button onclick="copyToClipboard('1330012710364')" class="shine-effect bg-[#F0F4F1] text-[#2F5233] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2F5233] hover:text-white transition flex items-center gap-2 relative z-10 overflow-hidden">
                             <i class="fas fa-copy"></i> Salin No. Rekening
                         </button>
                     </div>
 
-                    <!-- Bank Item 2 / Dompet Digital (Animasi Slide Kanan) -->
-                    <div class="glass-card p-6 rounded-xl border-l-4 border-[#C5A059] text-left relative" data-aos="fade-right" data-aos-duration="1000">
+                    <!-- Bank Item 2: BSI (Sparkling Animation) -->
+                    <div class="glass-card luxury-card p-6 rounded-xl border-l-4 border-[#C5A059] text-left relative" data-aos="fade-right" data-aos-duration="1000">
+                         <div class="sparkles"></div> <!-- Sparkle Overlay -->
                          <div class="flex items-center justify-between mb-2">
-                            <span class="font-bold text-xl italic text-blue-600">DANA</span>
-                            <i class="fas fa-wallet text-gray-300 text-2xl"></i>
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/a/a0/Bank_Syariah_Indonesia.svg" alt="BSI" class="h-8">
+                            <i class="fas fa-university text-yellow-600 text-2xl"></i>
                         </div>
-                        <p class="text-xs text-gray-500 uppercase tracking-wide">No. Telepon</p>
-                        <p class="text-xl font-bold text-gray-800 tracking-wider font-mono" id="rek2">0812-3456-7890</p>
-                        <p class="text-sm text-gray-600 mb-4">a.n Nurdiana Rahmadani</p>
-                        <button onclick="copyToClipboard('081234567890')" class="bg-[#F0F4F1] text-[#2F5233] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2F5233] hover:text-white transition flex items-center gap-2">
-                            <i class="fas fa-copy"></i> Salin Nomor
+                        <p class="text-xs text-gray-500 uppercase tracking-wide">No. Rekening</p>
+                        <p class="text-xl font-bold text-gray-800 tracking-wider font-mono" id="rek2">7292-9942-86</p>
+                        <p class="text-sm text-gray-600 mb-4 font-semibold">a.n Nurdiana Rahmadani Harahap</p>
+                        <button onclick="copyToClipboard('7292994286')" class="shine-effect bg-[#F0F4F1] text-[#2F5233] px-4 py-2 rounded-lg text-xs font-bold hover:bg-[#2F5233] hover:text-white transition flex items-center gap-2 relative z-10 overflow-hidden">
+                            <i class="fas fa-copy"></i> Salin No. Rekening
                         </button>
                     </div>
                 </div>
@@ -519,9 +661,9 @@
                 <!-- Form Kirim Ucapan (Fade Up) -->
                 <div class="bg-white p-6 rounded-xl shadow-md mb-8 border border-[#C5A059]/30" data-aos="fade-up" data-aos-duration="1000">
                     <form onsubmit="event.preventDefault(); addWish();">
-                        <input type="text" id="senderName" placeholder="Nama Anda" class="w-full p-3 mb-3 bg-[#F9F9F9] border border-gray-200 rounded-lg focus:outline-none focus:border-[#2F5233] transition">
-                        <textarea id="senderMsg" placeholder="Tulis ucapan & doa..." rows="3" class="w-full p-3 mb-3 bg-[#F9F9F9] border border-gray-200 rounded-lg focus:outline-none focus:border-[#2F5233] transition"></textarea>
-                        <button type="submit" class="w-full bg-[#2F5233] text-white py-3 rounded-lg font-bold hover:bg-[#1f3822] transition shadow-lg">Kirim Ucapan</button>
+                        <input type="text" id="senderName" placeholder="Nama Anda" class="w-full p-3 mb-3 bg-[#F9F9F9] border border-gray-200 rounded-lg focus:outline-none focus:border-[#2F5233] transition" required>
+                        <textarea id="senderMsg" placeholder="Tulis ucapan & doa..." rows="3" class="w-full p-3 mb-3 bg-[#F9F9F9] border border-gray-200 rounded-lg focus:outline-none focus:border-[#2F5233] transition" required></textarea>
+                        <button type="submit" class="shine-effect w-full bg-[#2F5233] text-white py-3 rounded-lg font-bold hover:bg-[#1f3822] transition shadow-lg relative overflow-hidden">Kirim Ucapan</button>
                     </form>
                 </div>
 
@@ -667,8 +809,9 @@
                 // Get Initials
                 const initials = name.match(/(\b\S)?/g).join("").match(/(^\S|\S$)?/g).join("").toUpperCase();
                 
+                // Animasi masuk (aos-animate akan di-trigger)
                 const newWish = `
-                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#2F5233]" data-aos="fade-in">
+                    <div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#2F5233] transition-all duration-500 transform translate-y-0 opacity-100" data-aos="fade-in">
                         <div class="flex items-center gap-2 mb-1">
                             <div class="w-8 h-8 rounded-full bg-[#2F5233] text-white flex items-center justify-center text-xs font-bold">${initials}</div>
                             <div>
@@ -679,9 +822,20 @@
                         <p class="text-sm text-gray-600 mt-2">${msg}</p>
                     </div>
                 `;
+                
+                // Masukkan ke bagian atas list
                 container.insertAdjacentHTML('afterbegin', newWish);
+                
+                // Clear form
                 document.getElementById('senderName').value = '';
                 document.getElementById('senderMsg').value = '';
+                
+                // Scroll sedikit ke area pesan agar user melihat pesannya masuk
+                // Menggunakan smooth scroll
+                container.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
             }
         }
 
