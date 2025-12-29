@@ -433,9 +433,10 @@
             </div>
             
             <p class="font-header text-gray-200 mb-2 text-sm">Kepada Yth.</p>
-            <p class="font-header text-white font-bold text-xl mb-10 tracking-wide border-b border-yellow-600/50 inline-block pb-2">Bapak/Ibu/Saudara/i</p>
             
-            <!-- Tombol Buka Undangan sekarang memiliki class animate-pulse dihapus diganti efek internal yg lebih smooth -->
+            <!-- MODIFICATION: Added ID 'guest-name' here to target this element -->
+            <p id="guest-name" class="font-header text-white font-bold text-xl mb-10 tracking-wide border-b border-yellow-600/50 inline-block pb-2">Bapak/Ibu/Saudara/i</p>
+            
             <button onclick="openInvitation()" class="buka-btn text-white px-8 py-3 rounded-full font-bold flex items-center justify-center gap-3 mx-auto shadow-[0_0_20px_rgba(255,215,0,0.6)]">
                 <i class="fas fa-envelope-open"></i> Buka Undangan
             </button>
@@ -450,7 +451,7 @@
             style="background-image: linear-gradient(rgba(255,255,255,0.85), rgba(255,255,255,0.9)), url('https://images.unsplash.com/photo-1515934751635-c81c6bc9a2d8?q=80&w=2070&auto=format&fit=crop');">
             
             <!-- Ornamen Atas -->
-            <img src="ikon.png" class="w-48 mx-auto mb-4 opacity-30" data-aos="fade-down">
+            <img src="ikon.png" class="w-48 mx-auto mb-4 opacity-30" onerror="this.style.display='none'" data-aos="fade-down">
 
             <!-- Bagian Save The Date -->
             <p class="text-sm tracking-[0.3em] uppercase mb-4 text-[#2F5233]" data-aos="fade-down" data-aos-delay="100">Save The Date</p>
@@ -502,7 +503,7 @@
                 <div class="mt-12" data-aos="fade-right" data-aos-duration="1200">
                     <div class="w-40 h-44 mx-auto mb-6 photo-frame transform rotate-2 hover:rotate-0 transition duration-500">
                         <!-- Placeholder Image Wanita Muslimah -->
-                        <img src="nikah2.png" alt="Diana">
+                        <img src="nikah2.png" alt="Diana" onerror="this.src='https://placehold.co/200x250/2F5233/FFF?text=Diana';">
                     </div>
                     <h3 class="font-script text-4xl text-[#2F5233] mb-2 font-bold text-gold">Nurdiana R. Hrp, S.Si</h3>
                     <p class="text-sm text-gray-600 font-serif">Putri Bpk. Ramadhan Harahap (Alm) <br>& Ibu Sakdiah Nasution</p>
@@ -515,7 +516,7 @@
                 <div class="" data-aos="fade-left" data-aos-duration="1200">
                     <div class="w-40 h-44 mx-auto mb-6 photo-frame transform -rotate-2 hover:rotate-0 transition duration-500">
                         <!-- Placeholder Image Pria Muslim -->
-                        <img src="nikah1.png" alt="Ikbal" style="object-position: right;">
+                        <img src="nikah1.png" alt="Ikbal" style="object-position: right;" onerror="this.src='https://placehold.co/200x250/2F5233/FFF?text=Ikbal';">
                     </div>
                     <h3 class="font-script text-4xl text-[#2F5233] mb-2 font-bold text-gold">M. Ikbal Rambe, S.Tp</h3>
                     <p class="text-sm text-gray-600 font-serif">Putra Bpk. Tohiruddin Rambe (Alm) <br>& Ibu Nurlaila Murni Nasution, A.Ma</p>
@@ -843,6 +844,26 @@
 
         // Initialize script logic safely when DOM is ready
         document.addEventListener('DOMContentLoaded', () => {
+            // === MODIFICATION: Check for URL Parameter 'to' ===
+            const urlParams = new URLSearchParams(window.location.search);
+            const guestName = urlParams.get('to');
+            
+            // Jika ada parameter 'to', ganti text di elemen guest-name
+            if (guestName) {
+                const guestElement = document.getElementById('guest-name');
+                if (guestElement) {
+                    // Mencegah XSS sederhana dengan textContent
+                    guestElement.textContent = guestName;
+                }
+                
+                // Opsional: Isi otomatis nama di form ucapan
+                const senderInput = document.getElementById('senderName');
+                if (senderInput) {
+                    senderInput.value = guestName;
+                }
+            }
+            // ==================================================
+
             // Init AOS Animation dengan Konfigurasi Muncul & Hilang
             AOS.init({
                 once: false,       // Animasi berulang setiap kali elemen masuk viewport
