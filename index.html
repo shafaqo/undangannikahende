@@ -135,14 +135,31 @@
         .nav-item.active { color: var(--primary-gold); }
         .nav-item i { font-size: 1.2rem; margin-bottom: 4px; }
 
+        /* --- PERBAIKAN BINGKAI FOTO --- */
         .photo-frame {
-            border: 4px solid var(--primary-gold); padding: 6px; border-radius: 100px 100px 0 0; position: relative; background: white; box-shadow: 0 10px 25px rgba(0,0,0,0.1); animation: frame-glow 3s infinite alternate;
+            border: 4px solid var(--primary-gold);
+            /* padding: 6px; DIHAPUS agar foto full ke bingkai */
+            border-radius: 100px 100px 0 0;
+            position: relative;
+            background: white;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            animation: frame-glow 3s infinite alternate;
+            /* Ditambahkan agar gambar tidak keluar dari border radius bingkai */
+            overflow: hidden; 
         }
         @keyframes frame-glow {
             from { box-shadow: 0 0 5px rgba(197, 160, 89, 0.1); border-color: #C5A059; }
             to { box-shadow: 0 0 20px rgba(197, 160, 89, 0.5); border-color: #e3c47e; }
         }
-        .photo-frame img { border-radius: 95px 95px 0 0; width: 100%; height: auto; object-fit: cover; }
+        .photo-frame img {
+            /* Diubah dari 95px menjadi 100px agar sesuai dengan bingkai luar setelah padding dihapus */
+            border-radius: 100px 100px 0 0; 
+            width: 100%;
+            /* Diubah dari auto menjadi 100% agar memenuhi tinggi bingkai */
+            height: 100%; 
+            object-fit: cover;
+        }
+        /* --- AKHIR PERBAIKAN BINGKAI FOTO --- */
 
         .buka-btn {
             background: linear-gradient(to right, var(--primary-gold), #b38728); box-shadow: 0 0 20px rgba(197, 160, 89, 0.5); transition: transform 0.2s; position: relative; overflow: hidden;
