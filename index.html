@@ -359,7 +359,11 @@
                         <button type="submit" id="btnSubmitWish" class="w-full bg-[#2F5233] text-white py-3 rounded-lg font-bold shadow-lg transition-all">Kirim Ucapan</button>
                     </form>
                 </div>
-                <div id="wishesContainer" class="space-y-4 max-h-80 overflow-y-auto pr-2"></div>
+                <div id="wishesContainer" class="space-y-4 max-h-80 overflow-y-auto pr-2">
+                    <div id="loadingWishes" class="text-center text-gray-500 text-sm hidden">
+                        <i class="fas fa-spinner fa-spin mr-2"></i> Memuat ucapan...
+                    </div>
+                </div>
             </div>
         </section>
 
@@ -386,6 +390,11 @@
     <!-- SCRIPTS -->
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
+        // ==========================================
+        // PASTE URL GOOGLE APPS SCRIPT ANDA DI SINI
+        // ==========================================
+        const scriptURL = 'PASTE_URL_WEB_APP_ANDA_DISINI'; 
+
         function openInvitation() {
             document.getElementById('cover-overlay').classList.add('cover-hidden');
             document.getElementById('main-content').classList.remove('hidden');
@@ -394,6 +403,9 @@
             document.getElementById('music-btn').style.display = 'flex';
             setTimeout(() => { document.querySelector('.bottom-nav').classList.add('visible'); }, 800);
             setTimeout(() => { AOS.refresh(); }, 500);
+            
+            // Panggil fungsi loadWishes saat undangan dibuka
+            loadWishes();
         }
 
         function toggleMusic() {
@@ -417,41 +429,74 @@
             setTimeout(() => { toast.classList.add('opacity-0', 'invisible'); }, 2500);
         }
 
+        // FUNGSI BARU: Mengambil data dari Spreadsheet (GET)
+        function loadWishes() {
+            const container = document.getElementById('wishesContainer');
+            const loading = document.getElementById('loadingWishes');
+            
+            if(!scriptURL || scriptURL === 'PASTE_URL_WEB_APP_ANDA_DISINI') return;
+
+            loading.classList.remove('hidden');
+            
+            fetch(scriptURL)
+            .then(response => response.json())
+            .then(data => {
+                loading.classList.add('hidden');
+                // Hapus isi container (kecuali loading div) sebelum append
+                // Tapi karena kita pakai afterbegin, lebih aman kita kosongkan dulu
+                // simpan loading element
+                const loadingClone = loading.cloneNode(true);
+                container.innerHTML = '';
+                container.appendChild(loadingClone);
+                
+                // Balik urutan data agar yang terbaru di proses terakhir (jadi paling atas karena afterbegin) 
+                // ATAU: Karena data dari sheet urut A->Z (lama->baru), dan kita mau Baru->Lama
+                // Jika pakai 'afterbegin' (sisip di atas), kita loop dari data terlama (index 0) ke terbaru.
+                // Logika: Data 0 (lama) masuk, Data 1 (baru) masuk diatasnya.
+                
+                if (Array.isArray(data)) {
+                    data.forEach(item => {
+                        const name = item.nama;
+                        const msg = item.ucapan;
+                        if(name && msg) {
+                            const initials = name.substring(0,2).toUpperCase();
+                            const wishHTML = `<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#2F5233] mb-3 animate-fade-in"><div class="flex items-center gap-2 mb-1"><div class="w-8 h-8 rounded-full bg-[#2F5233] text-white flex items-center justify-center text-xs font-bold">${initials}</div><div><p class="font-bold text-sm text-gray-800">${name}</p></div></div><p class="text-sm text-gray-600 mt-2">${msg}</p></div>`;
+                            container.insertAdjacentHTML('afterbegin', wishHTML);
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error loading wishes:', error);
+                loading.innerText = 'Gagal memuat ucapan.';
+            });
+        }
+
         function addWish() {
             const name = document.getElementById('senderName').value;
             const msg = document.getElementById('senderMsg').value;
             const btn = document.getElementById('btnSubmitWish');
             const container = document.getElementById('wishesContainer');
             
-            // ==========================================
-            // PASTE URL GOOGLE APPS SCRIPT ANDA DI SINI
-            // ==========================================
-            const scriptURL = 'https://script.google.com/macros/s/AKfycbydxTOp9ebk3fCIRnYsLlyNhZJbni2ZfNtlG2kOeGRjR2AkYP0pbOfZpNKu6W5vFfPL9Q/exec'; 
-
             if(name && msg) {
-                // Ubah tombol jadi loading
                 const originalText = btn.innerHTML;
                 btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mengirim...';
                 btn.disabled = true;
 
-                // Kirim ke Google Sheet
                 fetch(scriptURL, {
                     method: 'POST',
-                    headers: { 'Content-Type': 'text/plain' }, // PENTING: Gunakan text/plain untuk hindari CORS preflight
+                    headers: { 'Content-Type': 'text/plain' },
                     body: JSON.stringify({ nama: name, ucapan: msg })
                 })
                 .then(response => {
-                    // Jika sukses, tetap tampilkan di halaman secara lokal agar responsif
                     const initials = name.substring(0,2).toUpperCase();
                     const newWish = `<div class="bg-white p-4 rounded-lg shadow-sm border-l-4 border-[#2F5233] mb-3 animate-fade-in"><div class="flex items-center gap-2 mb-1"><div class="w-8 h-8 rounded-full bg-[#2F5233] text-white flex items-center justify-center text-xs font-bold">${initials}</div><div><p class="font-bold text-sm text-gray-800">${name}</p><p class="text-[10px] text-gray-400">Baru saja</p></div></div><p class="text-sm text-gray-600 mt-2">${msg}</p></div>`;
                     
                     container.insertAdjacentHTML('afterbegin', newWish);
                     
-                    // Reset Form
                     document.getElementById('senderName').value = '';
                     document.getElementById('senderMsg').value = '';
                     
-                    // Kembalikan tombol
                     btn.innerHTML = originalText;
                     btn.disabled = false;
                     
